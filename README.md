@@ -28,15 +28,12 @@ git clone https://github.com/BimbaSiri/Iron-Lady-Chatbot.git
 cd Iron-Lady-Chatbot
 
 Install Dependencies
-
 Make sure you have Python installed. Then install Flask (and Requests if using APIs):
 pip install Flask
 pip install requests
+
 Create Environment File
 Inside the project folder, create a .env file and add your own OpenAI API key:
-
-env
-Copy code
 OPENAI_API_KEY=your_api_key_here
 ⚠️ Do not share your .env file or API key publicly.
 
@@ -52,32 +49,20 @@ Project Structure
 
 Iron-Lady-Chatbot/
 │
-├── app.py              # Flask backend
+├── app.py             
 ├── templates/
-│   └── index.html      # Main HTML file
+│   └── index.html     
 ├── static/
 │   ├── css/
-│   │   └── style.css   # Stylesheet for the chatbot
+│   │   └── style.css   
 │   └── images/
-│       ├── ironlady.jpg       # Background image
-│       ├── before_chatting.png # Screenshot before chatting
-│       └── after_chatting.png  # Screenshot after chatting
-└── README.md           # Project documentation
-
-## Screenshots
-
-### Before Chatting
-![Before Chatting](static/images/screenshot_before.png)
-
-### After Chatting
-![After Chatting](static/images/screenshot_after.png)
+│       ├── ironlady.jpg      
+│       
+└── README.md           
 
 
 Future Enhancements
 Integrate real-time AI-based responses using OpenAI or other NLP APIs.
-
 Add multi-language support.
-
 Include user authentication to save chat history.
-
 Enhance UI/UX with advanced animations and themes.
