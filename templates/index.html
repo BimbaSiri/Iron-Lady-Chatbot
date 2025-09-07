@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iron Lady Chatbot</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages" id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Ask about Iron Lady programs...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesContainer = document.getElementById('messages');
+        const userInput = document.getElementById('user-input');
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Show bot typing animation
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('bot-message');
+            typingDiv.id = 'typing';
+            typingDiv.innerHTML = `<span class="typing"></span><span class="typing"></span><span class="typing"></span>`;
+            messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        // Remove typing animation
+        function removeTyping() {
+            const typingDiv = document.getElementById('typing');
+            if (typingDiv) typingDiv.remove();
+        }
+
+        // Send message
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Show user message
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.classList.add('message', 'user-message');
+            userMsgDiv.textContent = message;
+            messagesContainer.appendChild(userMsgDiv);
+            scrollToBottom();
+
+            userInput.value = '';
+
+            // Show bot typing
+            showTyping();
+
+            // Send to Flask backend
+            fetch('/get', {
+                method: 'POST',
+                body: new URLSearchParams({'msg': message}),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
+            .then(response => response.text())
+            .then(data => {
+                removeTyping();
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.classList.add('message', 'bot-message');
+                botMsgDiv.textContent = data;
+                messagesContainer.appendChild(botMsgDiv);
+                scrollToBottom();
+            })
+            .catch(() => {
+                removeTyping();
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.classList.add('message', 'bot-message');
+                botMsgDiv.textContent = "Sorry, something went wrong. Please try again.";
+                messagesContainer.appendChild(botMsgDiv);
+                scrollToBottom();
+            });
+        }
+
+        // Allow pressing Enter to send
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
